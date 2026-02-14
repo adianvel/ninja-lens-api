@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D0D0D"/>
+      <stop offset="100%" style="stop-color:#1A1A2E"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00F2FE"/>
+      <stop offset="100%" style="stop-color:#4FACFE"/>
+    </linearGradient>
+    <linearGradient id="ninja" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1B1B3A"/>
+      <stop offset="100%" style="stop-color:#2D2D5E"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="250" fill="url(#bg)" stroke="url(#accent)" stroke-width="3"/>
+
+  <!-- Ninja mask/bandana shape -->
+  <path d="M100 230 Q120 180 180 170 L256 160 L332 170 Q392 180 412 230 L420 260 Q412 290 380 300 L340 308 Q310 340 256 345 Q202 340 172 308 L132 300 Q100 290 92 260 Z" fill="url(#ninja)" stroke="url(#accent)" stroke-width="2" opacity="0.9"/>
+
+  <!-- Left eye (lens) -->
+  <ellipse cx="195" cy="248" rx="52" ry="38" fill="none" stroke="url(#accent)" stroke-width="3.5" filter="url(#glow)"/>
+  <ellipse cx="195" cy="248" rx="38" ry="27" fill="none" stroke="#00F2FE" stroke-width="1.5" opacity="0.5"/>
+  <!-- Left eye inner glow -->
+  <ellipse cx="195" cy="248" rx="30" ry="21" fill="#00F2FE" opacity="0.08"/>
+  <!-- Left pupil/iris -->
+  <ellipse cx="195" cy="248" rx="14" ry="14" fill="#00F2FE" opacity="0.25"/>
+  <ellipse cx="195" cy="248" rx="6" ry="6" fill="#00F2FE" opacity="0.6"/>
+  <!-- Left eye glint -->
+  <circle cx="205" cy="240" r="4" fill="white" opacity="0.7"/>
+
+  <!-- Right eye (lens) -->
+  <ellipse cx="317" cy="248" rx="52" ry="38" fill="none" stroke="url(#accent)" stroke-width="3.5" filter="url(#glow)"/>
+  <ellipse cx="317" cy="248" rx="38" ry="27" fill="none" stroke="#00F2FE" stroke-width="1.5" opacity="0.5"/>
+  <!-- Right eye inner glow -->
+  <ellipse cx="317" cy="248" rx="30" ry="21" fill="#00F2FE" opacity="0.08"/>
+  <!-- Right pupil/iris -->
+  <ellipse cx="317" cy="248" rx="14" ry="14" fill="#00F2FE" opacity="0.25"/>
+  <ellipse cx="317" cy="248" rx="6" ry="6" fill="#00F2FE" opacity="0.6"/>
+  <!-- Right eye glint -->
+  <circle cx="327" cy="240" r="4" fill="white" opacity="0.7"/>
+
+  <!-- Bridge between eyes -->
+  <path d="M243 252 Q256 265 269 252" fill="none" stroke="url(#accent)" stroke-width="2" opacity="0.6"/>
+
+  <!-- Lens crosshair lines (subtle) -->
+  <line x1="195" y1="222" x2="195" y2="274" stroke="#00F2FE" stroke-width="0.8" opacity="0.2"/>
+  <line x1="155" y1="248" x2="235" y2="248" stroke="#00F2FE" stroke-width="0.8" opacity="0.2"/>
+  <line x1="317" y1="222" x2="317" y2="274" stroke="#00F2FE" stroke-width="0.8" opacity="0.2"/>
+  <line x1="277" y1="248" x2="357" y2="248" stroke="#00F2FE" stroke-width="0.8" opacity="0.2"/>
+
+  <!-- Ninja headband knot (back tails) -->
+  <path d="M405 240 Q430 225 445 195 Q450 180 440 175" fill="none" stroke="url(#accent)" stroke-width="3" stroke-linecap="round" opacity="0.7" filter="url(#softGlow)"/>
+  <path d="M408 255 Q440 250 460 225 Q468 215 462 208" fill="none" stroke="url(#accent)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Data stream particles (representing API/blockchain data) -->
+  <circle cx="448" cy="185" r="3" fill="#00F2FE" opacity="0.6" filter="url(#softGlow)"/>
+  <circle cx="465" cy="215" r="2" fill="#4FACFE" opacity="0.5"/>
+  <circle cx="435" cy="170" r="2" fill="#00F2FE" opacity="0.4"/>
+
+  <!-- Bottom text area -->
+  <text x="256" y="410" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-weight="700" font-size="42" fill="url(#accent)" filter="url(#softGlow)" letter-spacing="6">NINJA LENS</text>
+  <text x="256" y="445" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-weight="300" font-size="22" fill="#4FACFE" opacity="0.7" letter-spacing="12">API</text>
+</svg>

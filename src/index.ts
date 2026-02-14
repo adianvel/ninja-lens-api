@@ -15,6 +15,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Serve static files (logo, favicon)
+app.use("/public", express.static("public"));
+
 // Swagger configuration
 const swaggerOptions: swaggerJsdoc.Options = {
   definition: {
@@ -67,8 +70,20 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 // Swagger UI
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCss: ".swagger-ui .topbar { display: none }",
+  customCss: `
+    .swagger-ui .topbar { background: #0D0D0D; padding: 8px 0; }
+    .swagger-ui .topbar .download-url-wrapper { display: none; }
+    .swagger-ui .topbar-wrapper { display: flex; align-items: center; }
+    .swagger-ui .topbar-wrapper .link { display: flex; align-items: center; }
+    .swagger-ui .topbar-wrapper img { height: 48px; }
+    .swagger-ui .topbar-wrapper .link::after { content: "Ninja Lens API"; color: #00F2FE; font-size: 20px; font-weight: 700; margin-left: 12px; letter-spacing: 2px; }
+  `,
   customSiteTitle: "Ninja Lens API Docs",
+  customfavIcon: "/public/favicon.svg",
+  customCssUrl: undefined,
+  swaggerOptions: {
+    displayRequestDuration: true,
+  },
 }));
 
 // Swagger JSON

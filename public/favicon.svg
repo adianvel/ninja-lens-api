@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D0D0D"/>
+      <stop offset="100%" style="stop-color:#1A1A2E"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00F2FE"/>
+      <stop offset="100%" style="stop-color:#4FACFE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <circle cx="32" cy="32" r="30" fill="url(#bg)" stroke="url(#accent)" stroke-width="2"/>
+
+  <!-- Ninja mask -->
+  <path d="M12 28 Q14 22 22 20 L32 19 L42 20 Q50 22 52 28 L53 32 Q52 36 48 38 L43 39 Q39 43 32 44 Q25 43 21 39 L16 38 Q12 36 11 32 Z" fill="#1B1B3A" stroke="url(#accent)" stroke-width="1" opacity="0.9"/>
+
+  <!-- Left eye -->
+  <ellipse cx="24" cy="30" rx="7" ry="5" fill="none" stroke="#00F2FE" stroke-width="1.5"/>
+  <ellipse cx="24" cy="30" rx="3" ry="3" fill="#00F2FE" opacity="0.3"/>
+  <circle cx="24" cy="30" r="1.2" fill="#00F2FE" opacity="0.7"/>
+
+  <!-- Right eye -->
+  <ellipse cx="40" cy="30" rx="7" ry="5" fill="none" stroke="#00F2FE" stroke-width="1.5"/>
+  <ellipse cx="40" cy="30" rx="3" ry="3" fill="#00F2FE" opacity="0.3"/>
+  <circle cx="40" cy="30" r="1.2" fill="#00F2FE" opacity="0.7"/>
+
+  <!-- Headband tails -->
+  <path d="M51 28 Q55 25 57 21" fill="none" stroke="#00F2FE" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M52 31 Q56 29 59 25" fill="none" stroke="#4FACFE" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+</svg>
