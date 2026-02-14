@@ -91,9 +91,15 @@ export class TokenService {
         });
 
         if (trades.length > 0) {
-          const lastPrice = parseFloat(trades[0].price || "0");
-          if (lastPrice > 0 && market.baseDenom) {
-            priceMap[market.baseDenom] = lastPrice;
+          const rawPrice = parseFloat(trades[0].price || "0");
+          if (rawPrice > 0 && market.baseDenom) {
+            // On-chain prices need decimal adjustment:
+            // humanPrice = rawPrice * 10^(baseDecimals - quoteDecimals)
+            const baseMeta = resolveDenom(market.baseDenom);
+            const quoteMeta = resolveDenom(market.quoteDenom);
+            const decimalDiff = baseMeta.decimals - quoteMeta.decimals;
+            const humanPrice = rawPrice * Math.pow(10, decimalDiff);
+            priceMap[market.baseDenom] = humanPrice;
           }
         }
       } catch {

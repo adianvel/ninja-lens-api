@@ -5,7 +5,10 @@ import {
   IndexerGrpcAccountApi,
   IndexerGrpcOracleApi,
   ChainGrpcBankApi,
+  getEthereumAddress,
 } from "@injectivelabs/sdk-ts";
+
+export { getEthereumAddress };
 
 const NETWORK = Network.Mainnet;
 const endpoints = getNetworkEndpoints(NETWORK);

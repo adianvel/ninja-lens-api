@@ -137,7 +137,16 @@ export class MarketService {
             pagination: { limit: 2 },
           });
           if (trades.length > 0) {
-            market.lastPrice = parseFloat(trades[0].price || "0");
+            const rawPrice = parseFloat(trades[0].price || "0");
+            // Adjust for decimal difference between base and quote
+            const baseMeta = market.baseDenom ? resolveDenom(market.baseDenom) : null;
+            const quoteMeta = market.quoteDenom ? resolveDenom(market.quoteDenom) : null;
+            if (baseMeta && quoteMeta) {
+              const decimalDiff = baseMeta.decimals - quoteMeta.decimals;
+              market.lastPrice = rawPrice * Math.pow(10, decimalDiff);
+            } else {
+              market.lastPrice = rawPrice;
+            }
           }
         } else {
           const { trades } = await indexerGrpcDerivativesApi.fetchTrades({
@@ -145,7 +154,10 @@ export class MarketService {
             pagination: { limit: 2 },
           });
           if (trades.length > 0) {
-            market.lastPrice = parseFloat(trades[0].executionPrice || "0");
+            // Derivative prices: adjust by quote decimals only
+            const quoteMeta = market.quoteDenom ? resolveDenom(market.quoteDenom) : null;
+            const rawPrice = parseFloat(trades[0].executionPrice || "0");
+            market.lastPrice = quoteMeta ? rawPrice * Math.pow(10, -quoteMeta.decimals) : rawPrice;
           }
 
           // Fetch funding rate for perpetuals
