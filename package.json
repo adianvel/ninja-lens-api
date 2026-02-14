@@ -1,0 +1,36 @@
+{
+  "name": "ninja-lens-api",
+  "version": "1.0.0",
+  "description": "A single lens to see everything on Injective - Unified REST API for portfolio, markets, tokens & analytics",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["injective", "api", "defi", "blockchain", "portfolio"],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@injectivelabs/networks": "^1.17.7",
+    "@injectivelabs/sdk-ts": "^1.17.7",
+    "@injectivelabs/ts-types": "^1.17.7",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "node-cache": "^5.1.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.2.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
