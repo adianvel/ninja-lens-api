@@ -46,6 +46,9 @@ const router = Router();
  *         schema:
  *           type: integer
  *           default: 0
+ *     responses:
+ *       200:
+ *         description: List of markets
  */
 router.get("/", async (req: Request, res: Response) => {
   try {
@@ -91,6 +94,11 @@ router.get("/", async (req: Request, res: Response) => {
  *         required: true
  *         schema:
  *           type: string
+ *     responses:
+ *       200:
+ *         description: Market details
+ *       404:
+ *         description: Market not found
  */
 router.get("/:marketId", async (req: Request, res: Response) => {
   try {
@@ -131,6 +139,11 @@ router.get("/:marketId", async (req: Request, res: Response) => {
  *         required: true
  *         schema:
  *           type: string
+ *     responses:
+ *       200:
+ *         description: Market analytics data
+ *       404:
+ *         description: Market not found
  */
 router.get("/:marketId/analytics", async (req: Request, res: Response) => {
   try {

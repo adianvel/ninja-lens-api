@@ -1,7 +1,6 @@
 import {
   chainGrpcBankApi,
   indexerGrpcDerivativesApi,
-  indexerGrpcAccountApi,
 } from "../config/injective";
 import { cached } from "../utils/cache";
 import { resolveDenom, toHumanAmount } from "../utils/denom";
@@ -15,68 +14,76 @@ import {
 
 export class PortfolioService {
   async getPortfolio(address: string): Promise<PortfolioResponse> {
-    return cached(`portfolio:${address}`, async () => {
-      // Parallel fetch all data sources
-      const [bankBalances, derivativePositions] = await Promise.all([
-        this.fetchBankBalances(address),
-        this.fetchDerivativePositions(address),
-      ]);
+    // Don't cache errors — let them propagate
+    // Bank balances can throw on invalid address, so do it first
+    const [bankBalances, derivativePositions] = await Promise.all([
+      this.fetchBankBalances(address),
+      this.fetchDerivativePositions(address),
+    ]);
 
-      const totalBalanceValueUsd = bankBalances.reduce((sum, b) => sum + b.valueUsd, 0);
-      const totalUnrealizedPnl = derivativePositions.reduce(
-        (sum, p) => sum + p.unrealizedPnl,
-        0
-      );
-      const totalPositionsValueUsd = derivativePositions.reduce(
-        (sum, p) => sum + parseFloat(p.margin),
-        0
-      );
+    const totalBalanceValueUsd = bankBalances.reduce((sum, b) => sum + b.valueUsd, 0);
+    const totalUnrealizedPnl = derivativePositions.reduce(
+      (sum, p) => sum + p.unrealizedPnl,
+      0
+    );
+    const totalPositionsValueUsd = derivativePositions.reduce(
+      (sum, p) => sum + parseFloat(p.margin),
+      0
+    );
 
-      return {
-        address,
-        totalValueUsd: totalBalanceValueUsd + totalPositionsValueUsd,
-        balances: bankBalances,
-        derivativePositions,
-        summary: {
-          totalBalanceValueUsd,
-          totalPositionsValueUsd,
-          totalUnrealizedPnl,
-          positionsCount: derivativePositions.length,
-        },
-        timestamp: Date.now(),
-      };
-    }, 15); // Cache 15 seconds for portfolio data
+    return {
+      address,
+      totalValueUsd: totalBalanceValueUsd + totalPositionsValueUsd,
+      balances: bankBalances,
+      derivativePositions,
+      summary: {
+        totalBalanceValueUsd,
+        totalPositionsValueUsd,
+        totalUnrealizedPnl,
+        positionsCount: derivativePositions.length,
+      },
+      timestamp: Date.now(),
+    };
   }
 
   private async fetchBankBalances(address: string): Promise<PortfolioBalance[]> {
-    try {
-      const { balances } = await chainGrpcBankApi.fetchBalances(address);
-      const portfolioBalances: PortfolioBalance[] = [];
+    const { balances } = await chainGrpcBankApi.fetchBalances(address);
+    const portfolioBalances: PortfolioBalance[] = [];
 
-      for (const balance of balances) {
-        const denom = balance.denom;
-        const amount = balance.amount;
-        const meta = resolveDenom(denom);
-        const amountHuman = toHumanAmount(amount, meta.decimals);
-        const priceUsd = await tokenService.getPrice(denom);
-        const valueUsd = parseFloat(amountHuman) * priceUsd;
+    // Build price map from known denoms (lightweight, no extra API calls)
+    const priceMap = await this.getPriceMap();
 
-        portfolioBalances.push({
-          denom,
-          symbol: meta.symbol,
-          amount,
-          amountHuman,
-          valueUsd,
-        });
-      }
+    for (const balance of balances) {
+      const denom = balance.denom;
+      const amount = balance.amount;
+      const meta = resolveDenom(denom);
+      const amountHuman = toHumanAmount(amount, meta.decimals);
+      const priceUsd = priceMap.get(denom) || 0;
+      const valueUsd = parseFloat(amountHuman) * priceUsd;
 
-      // Sort by USD value descending
-      portfolioBalances.sort((a, b) => b.valueUsd - a.valueUsd);
-      return portfolioBalances;
-    } catch (error) {
-      console.error(`Failed to fetch bank balances for ${address}:`, error);
-      return [];
+      portfolioBalances.push({
+        denom,
+        symbol: meta.symbol,
+        amount,
+        amountHuman,
+        valueUsd,
+      });
     }
+
+    // Sort by USD value descending
+    portfolioBalances.sort((a, b) => b.valueUsd - a.valueUsd);
+    return portfolioBalances;
+  }
+
+  private async getPriceMap(): Promise<Map<string, number>> {
+    return cached("portfolio:priceMap", async () => {
+      try {
+        const allTokens = await tokenService.getAllTokens();
+        return new Map(allTokens.map((t) => [t.denom, t.priceUsd]));
+      } catch {
+        return new Map<string, number>();
+      }
+    }, 60);
   }
 
   private async fetchDerivativePositions(address: string): Promise<DerivativePosition[]> {

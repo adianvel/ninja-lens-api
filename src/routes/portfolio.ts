@@ -26,7 +26,14 @@ const router = Router();
  *         schema:
  *           type: string
  *         description: Injective address (inj1...)
- *         example: inj1...
+ *         example:
+ *     responses:
+ *       200:
+ *         description: Portfolio data returned successfully
+ *       400:
+ *         description: Invalid Injective address
+ *       500:
+ *         description: Server error
  */
 router.get("/:address", async (req: Request, res: Response) => {
   try {
@@ -56,9 +63,14 @@ router.get("/:address", async (req: Request, res: Response) => {
     };
     res.json(response);
   } catch (error: any) {
-    res.status(500).json({
+    const message = error.message || "Unknown error";
+    const isBadAddress = message.includes("invalid address") || message.includes("bech32") || message.includes("decoding");
+    const statusCode = isBadAddress ? 400 : 500;
+    const code = isBadAddress ? "INVALID_ADDRESS" : "PORTFOLIO_FETCH_ERROR";
+
+    res.status(statusCode).json({
       success: false,
-      error: { code: "PORTFOLIO_FETCH_ERROR", message: error.message },
+      error: { code, message },
     });
   }
 });

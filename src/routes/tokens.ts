@@ -50,6 +50,11 @@ router.get("/", async (_req: Request, res: Response) => {
  *         schema:
  *           type: string
  *         description: The token denomination string
+ *     responses:
+ *       200:
+ *         description: Token metadata with USD price
+ *       404:
+ *         description: Token not found
  */
 router.get("/:denom", async (req: Request, res: Response) => {
   try {
